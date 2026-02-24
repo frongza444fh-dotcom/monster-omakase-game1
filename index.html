@@ -2,12 +2,12 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monster Omakase - Auto Mic Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Monster Omakase - Universal Master</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mali:wght@400;700&family=Fredoka:wght@600&display=swap');
 
-        body { margin: 0; padding: 0; background-color: #2c3e50; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Fredoka', 'Mali', sans-serif; overflow: hidden; }
+        body { margin: 0; padding: 0; background-color: #2c3e50; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Fredoka', 'Mali', sans-serif; overflow: hidden; touch-action: none; }
         #game-container { width: 100%; max-width: 900px; aspect-ratio: 16 / 9; background-color: #000; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 20px; border: 8px solid #34495e; }
         .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; background-size: cover; background-position: center; background-repeat: no-repeat; }
         .active { display: flex; }
@@ -22,29 +22,26 @@
         #leaderboard-screen { background-image: url('leader board.png'); justify-content: flex-start; padding-top: 40px; }
 
         /* --- UI Elements --- */
-        .top-bar { position: absolute; top: 20px; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 50; pointer-events: none; }
+        .top-bar { position: absolute; top: 20px; width: 100%; display: flex; justify-content: center; align-items: center; z-index: 100; pointer-events: none; }
         .top-bar > div, .top-bar > button { pointer-events: auto; }
         #score-display, #boss-score-display { position: absolute; left: 30px; font-size: 2rem; color: #333; text-shadow: 2px 2px #fff; font-weight: bold; }
         #timer-display, #boss-timer-display { font-size: 2.2rem; color: #ff4757; background: rgba(255,255,255,0.8); padding: 5px 20px; border-radius: 20px; border: 3px solid #ff4757; }
         .btn-home { position: absolute; right: 30px; background-color: #54a0ff; box-shadow: 0 5px 0 #2e86de; border: none; color: white; border-radius: 50px; padding: 10px 20px; cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 1.2rem; }
-        .btn-home:active { transform: translateY(3px); box-shadow: none; }
 
-        /* --- Fonts & Buttons --- */
         .title-3d { font-size: 3.5rem; color: #fff; text-shadow: 0 2px 0 #ff6b81, 0 4px 0 #ff6b81, 0 6px 0 #ff6b81, 0 8px 0 #ff6b81, 0 10px 15px rgba(0,0,0,0.4); margin-bottom: 20px; text-align: center; }
         .target-word { font-size: 6rem; color: #fffa65; font-weight: bold; text-shadow: 4px 4px 0px #ff4757, 8px 8px 0px #333, 10px 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px; z-index: 20; letter-spacing: 5px; }
-        .btn { padding: 12px 30px; font-size: 1.5rem; background-color: #ff9ff3; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 0 #f368e0; font-family: 'Fredoka', sans-serif; margin: 5px; transition: all 0.1s; }
+        .btn { padding: 12px 30px; font-size: 1.5rem; background-color: #ff9ff3; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 0 #f368e0; font-family: 'Fredoka', sans-serif; margin: 5px; transition: all 0.1s; -webkit-tap-highlight-color: transparent; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #f368e0; }
         
         .mic-active-effect { box-shadow: 0 0 20px #ff6b81, 0 10px 0 #c0392b !important; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* --- Game Play Elements --- */
+        /* --- Game Elements --- */
         .mouth-zone { position: absolute; border-radius: 50%; z-index: 10; border: 3px dashed rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1); }
         .conveyor-belt { position: absolute; bottom: 0; width: 100%; height: 120px; z-index: 15; }
         
-        /* --- Sushi CSS Art --- */
-        .sushi-wrapper { position: absolute; bottom: 25px; display: flex; flex-direction: column; align-items: center; cursor: grab; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); user-select: none; z-index: 16; }
-        .sushi-wrapper:active { cursor: grabbing; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.6)); transform: scale(0.95); }
+        /* Sushi Art */
+        .sushi-wrapper { position: absolute; bottom: 25px; display: flex; flex-direction: column; align-items: center; cursor: grab; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); user-select: none; z-index: 150; touch-action: none; }
         .sushi-topping { width: 110%; height: 28px; border-radius: 20px 20px 5px 5px; margin-bottom: -10px; z-index: 2; border: 2px solid rgba(0,0,0,0.1); border-bottom: none; }
         .sushi-rice { background: #fff; border: 3px solid #ccc; padding: 5px 25px; border-radius: 10px 10px 20px 20px; font-size: 1.6rem; font-weight: bold; color: #333; z-index: 1; text-align: center; box-shadow: inset -4px -4px 6px rgba(0,0,0,0.08); }
 
@@ -56,7 +53,7 @@
         .topping-5 { background: radial-gradient(circle, #ff9f43 40%, transparent 40%), #2f3640; background-size: 15px 15px; border-radius: 10px 10px 0 0; }
 
         /* --- Feedback & Tables --- */
-        .feedback-pop { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 5rem; font-weight: bold; z-index: 100; pointer-events: none; text-shadow: 4px 4px 0 #000; transition: transform 0.3s; }
+        .feedback-pop { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 5rem; font-weight: bold; z-index: 1000; pointer-events: none; text-shadow: 4px 4px 0 #000; transition: transform 0.3s; }
         .feedback-pop.show { transform: translate(-50%, -50%) scale(1.2); }
         .correct { color: #2ed573; } .wrong { color: #ff4757; }
         .ranking-container { width: 85%; background: rgba(255, 255, 255, 0.9); border-radius: 20px; padding: 15px; max-height: 60%; overflow-y: auto; border: 4px solid #ff9ff3; }
@@ -67,7 +64,7 @@
 </head>
 <body>
 
-<audio id="bg-music" src="bg-music.mp3" loop></audio>
+<audio id="bg-music" src="bg-music.mp3" loop preload="auto"></audio>
 
 <div id="game-container">
     <div id="home-screen" class="screen active">
@@ -188,8 +185,59 @@
     let score = 0, timeLeft = 30, gameInterval, spawnInterval, bossInterval, currentMode, vocabPool = [];
     let currentBossWord = "";
     let isMicActive = false, isBossStageActive = false, isProcessing = false;
+    let nativeVoice = null;
 
-    // ตั้งค่าไมค์ใหม่ให้เสถียรขึ้น
+    // --- 🔊 ระบบค้นหาเสียง Native ขั้นสูง (Smart Voice Selector) ---
+    function loadNativeVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length === 0) return;
+
+        // รายชื่อเสียงที่มีความสมจริง (เรียงตามลำดับความต้องการ)
+        const preferredNames = [
+            'Google US English',       // ดีที่สุดบน Chrome/Android
+            'Microsoft Zira',          // ดีที่สุดบน Windows
+            'Microsoft Aria',          // ดีที่สุดบน Edge
+            'Samantha',                // ดีที่สุดบน iOS/iPadOS
+            'Karen',                   // เสียงออสเตรเลียชัดๆ บน Apple
+            'Daniel'                   // เสียงผู้ดีอังกฤษ บน Apple
+        ];
+
+        // 1. หาจากรายชื่อ Preferred
+        for (let name of preferredNames) {
+            nativeVoice = voices.find(v => v.name.includes(name));
+            if (nativeVoice) break;
+        }
+
+        // 2. ถ้าหาไม่เจอ ให้หาเสียงที่มีคำว่า Premium หรือ Enhanced (ของระบบ Apple)
+        if (!nativeVoice) {
+            nativeVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Premium') || v.name.includes('Enhanced')));
+        }
+
+        // 3. ถ้ายังไม่มีอีก ให้เอาเสียงภาษาอังกฤษ US อันแรกที่เจอ
+        if (!nativeVoice) {
+            nativeVoice = voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en'));
+        }
+    }
+    
+    // โหลดเสียงทันทีที่โหลดหน้าจอ และอัปเดตเมื่อระบบเสียงพร้อม
+    loadNativeVoice();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadNativeVoice;
+    }
+
+    function speak(t) {
+        window.speechSynthesis.cancel();
+        let msg = new SpeechSynthesisUtterance(t);
+        
+        // ตรวจสอบเสียงอีกครั้งก่อนพูด
+        if (!nativeVoice) loadNativeVoice();
+        if (nativeVoice) msg.voice = nativeVoice;
+        
+        msg.lang = 'en-US'; 
+        msg.rate = 0.9; // ปรับให้พูดช้าลงเล็กน้อยเพื่อให้เด็ก ป.1-3 ฟังชัดขึ้น
+        window.speechSynthesis.speak(msg);
+    }
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition;
     if (SpeechRecognition) {
@@ -205,9 +253,16 @@
         if(id === 'leaderboard-screen') displayLeaderboard();
     }
 
+    // --- 📺 แก้ปัญหา AirPlay Audio Unlock ---
     function startGameSession() {
         const music = document.getElementById('bg-music');
-        if(music) { music.volume = 0.4; music.play(); }
+        if(music) { music.volume = 0.4; music.play().catch(e => console.log("รอการโต้ตอบ")); }
+        
+        // ปลุกระบบเสียงพูด (Text-to-Speech) ให้ตื่นพร้อมทำงานร่วมกับทีวี
+        let wakeUpVoice = new SpeechSynthesisUtterance(' ');
+        wakeUpVoice.volume = 0;
+        window.speechSynthesis.speak(wakeUpVoice);
+        
         showScreen('mode-screen');
     }
 
@@ -231,6 +286,7 @@
         ml.dataset.cat = currentMode.leftMouth.cat; mr.dataset.cat = currentMode.rightMouth.cat;
     }
 
+    // --- 👆 ระบบสัมผัสและลากสำหรับหน้าจอ Touch Screen ทุกแบบ ---
     function spawnSushi() {
         if (vocabPool.length === 0) vocabPool = [...currentMode.vocab];
         const randomIndex = Math.floor(Math.random() * vocabPool.length);
@@ -238,31 +294,72 @@
         const toppingType = Math.floor(Math.random() * 5) + 1;
         const wrapper = document.createElement('div'); wrapper.className = 'sushi-wrapper'; wrapper.draggable = true; 
         wrapper.innerHTML = `<div class="sushi-topping topping-${toppingType}"></div><div class="sushi-rice">${item.word}</div>`;
-        wrapper.addEventListener('dragstart', (e) => { e.dataTransfer.setData('cat', item.cat); wrapper.id = 'dragging-item'; });
         document.getElementById('conveyor').appendChild(wrapper);
         speak(item.word);
+
+        let isDragging = false;
+        
+        // รองรับเมาส์ (คอมพิวเตอร์)
+        wrapper.addEventListener('dragstart', (e) => { e.dataTransfer.setData('cat', item.cat); wrapper.id = 'dragging-item'; });
+        
+        // รองรับนิ้วสัมผัส (iPad/Tablet/Mobile)
+        const handleStart = () => { isDragging = true; wrapper.style.zIndex = 1000; };
+        const handleMove = (e) => {
+            if (!isDragging) return; 
+            e.preventDefault();
+            let touch = e.touches ? e.touches[0] : e;
+            let container = document.getElementById('game-container').getBoundingClientRect();
+            wrapper.style.left = (touch.clientX - container.left - 50) + 'px';
+            wrapper.style.top = (touch.clientY - container.top - 30) + 'px';
+            wrapper.style.bottom = 'auto';
+        };
+        const handleEnd = () => {
+            isDragging = false;
+            const mouths = document.querySelectorAll('.mouth-zone');
+            const sushiRect = wrapper.getBoundingClientRect();
+            let matched = false;
+            mouths.forEach(m => {
+                const mRect = m.getBoundingClientRect();
+                if (sushiRect.left < mRect.right && sushiRect.right > mRect.left && sushiRect.top < mRect.bottom && sushiRect.bottom > mRect.top) {
+                    matched = true; checkMatch(item.cat, m);
+                }
+            });
+            if (matched) wrapper.remove();
+        };
+
+        wrapper.addEventListener('touchstart', handleStart, {passive: false});
+        wrapper.addEventListener('touchmove', handleMove, {passive: false});
+        wrapper.addEventListener('touchend', handleEnd);
+
         let pos = 100;
-        let move = setInterval(() => { pos -= 0.6; wrapper.style.left = pos + '%'; if(pos < -20) { clearInterval(move); if(wrapper.parentNode) wrapper.remove(); } }, 20);
+        let move = setInterval(() => { 
+            if(!isDragging) { 
+                pos -= 0.6; wrapper.style.left = pos + '%'; 
+                if(pos < -20) { clearInterval(move); if(wrapper.parentNode) wrapper.remove(); } 
+            } 
+        }, 20);
     }
 
+    // รองรับเมาส์ Drop
     document.querySelectorAll('.mouth-zone').forEach(m => {
         m.addEventListener('dragover', (e) => { e.preventDefault(); m.classList.add('drag-over'); });
         m.addEventListener('dragleave', () => m.classList.remove('drag-over'));
         m.addEventListener('drop', (e) => {
             e.preventDefault(); m.classList.remove('drag-over');
             const cat = e.dataTransfer.getData('cat');
-            const isCorrect = (cat === m.dataset.cat);
-            showFeedback('big-feedback', isCorrect);
-            if(isCorrect) { score += 10; speak("Correct!"); } else { speak("Wrong!"); }
+            checkMatch(cat, m);
             const dragging = document.getElementById('dragging-item');
             if(dragging) dragging.remove();
-            document.getElementById('score-display').innerText = `Score: ${score}`;
         });
     });
 
-    function showFeedback(id, correct) {
-        const fb = document.getElementById(id); fb.innerText = correct ? "Correct! ✅" : "Wrong! ❌";
+    function checkMatch(cat, mouth) {
+        const correct = (cat === mouth.dataset.cat);
+        const fb = document.getElementById('big-feedback');
+        fb.innerText = correct ? "Correct! ✅" : "Wrong! ❌";
         fb.className = `feedback-pop show ${correct ? 'correct' : 'wrong'}`;
+        if(correct) { score += 10; speak("Correct!"); } else { speak("Wrong!"); }
+        document.getElementById('score-display').innerText = `Score: ${score}`;
         setTimeout(() => fb.classList.remove('show'), 800);
     }
 
@@ -300,7 +397,7 @@
         if (isMicActive) return;
 
         isMicActive = true;
-        isProcessing = false; // เคลียร์สถานะปิดหู
+        isProcessing = false; 
         
         const btn = document.getElementById('mic-btn'); 
         btn.innerText = "🔴 Mic Active (พูดได้เลย!)"; 
@@ -311,10 +408,8 @@
         recognition.onresult = (event) => {
             if (isProcessing || !isBossStageActive) return; 
             
-            // ดึงคำล่าสุดออกมาอย่างแม่นยำ
             const latestResultIndex = event.results.length - 1;
             let spoken = event.results[latestResultIndex][0].transcript.toLowerCase().trim();
-            // ทำความสะอาดข้อความ ลบสัญลักษณ์พิเศษออกให้เหลือแค่ตัวอักษร
             spoken = spoken.replace(/[^a-zก-ฮะ-์ ]/gi, "");
             
             let isCorrect = (spoken === currentBossWord.toLowerCase());
@@ -324,14 +419,14 @@
             showFeedback('boss-feedback', isCorrect);
             
             if (isCorrect) {
-                isProcessing = true; // ปิดหูไม่ให้ไมค์ฟังเสียง Excellent! ของตัวเอง
+                isProcessing = true; 
                 score += 20; document.getElementById('boss-score-display').innerText = `Score: ${score}`;
                 speak("Excellent!"); 
                 
                 setTimeout(() => { 
                     if (isBossStageActive) { 
                         nextBossWord(); 
-                        isProcessing = false; // เปิดหูให้พร้อมฟังคำต่อไป
+                        isProcessing = false; 
                     } 
                 }, 1500);
             } else { 
@@ -340,19 +435,17 @@
             }
         };
 
-        // ไฮไลท์สำคัญ: ดักไม่ให้ไมค์หลับ ถ้าไมค์ตัดเอง ให้มันเปิดตัวเองขึ้นมาใหม่ทันที
         recognition.onend = () => { 
             if(isMicActive && isBossStageActive) { 
-                setTimeout(() => { 
-                    try { recognition.start(); } catch(e) {} 
-                }, 200); // หน่วง 0.2 วิเพื่อไม่ให้เบราว์เซอร์มองว่าเป็นสแปม
+                setTimeout(() => { try { recognition.start(); } catch(e) {} }, 200); 
             } 
         };
-        
-        recognition.onerror = (e) => {
-            // ถ้าระบบบ่นว่าจับเสียงไม่ได้ (no-speech) ปล่อยผ่านไปให้ onend จัดการปลุกไมค์
-            console.log("Mic Status:", e.error);
-        };
+    }
+
+    function showFeedback(id, correct) {
+        const fb = document.getElementById(id); fb.innerText = correct ? "Correct! ✅" : "Wrong! ❌";
+        fb.className = `feedback-pop show ${correct ? 'correct' : 'wrong'}`;
+        setTimeout(() => fb.classList.remove('show'), 800);
     }
 
     function showResult() { document.getElementById('final-score').innerText = `Score: ${score}`; showScreen('result-screen'); }
@@ -379,8 +472,6 @@
             displayLeaderboard();
         }
     }
-
-    function speak(t) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); }
 </script>
 </body>
 </html>
