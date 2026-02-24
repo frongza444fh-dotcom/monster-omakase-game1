@@ -2,14 +2,13 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Monster Omakase - Cross Platform Audio Fix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monster Omakase - AirPlay Ready</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mali:wght@400;700&family=Fredoka:wght@600&display=swap');
 
-        body { margin: 0; padding: 0; background-color: #2c3e50; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Fredoka', 'Mali', sans-serif; overflow: hidden; overscroll-behavior: none; }
-        #game-container { width: 100%; max-width: 900px; aspect-ratio: 16 / 9; background-color: #000; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 20px; border: 8px solid #34495e; touch-action: none; }
-        
+        body { margin: 0; padding: 0; background-color: #2c3e50; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Fredoka', 'Mali', sans-serif; overflow: hidden; }
+        #game-container { width: 100%; max-width: 900px; aspect-ratio: 16 / 9; background-color: #000; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-radius: 20px; border: 8px solid #34495e; }
         .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; background-size: cover; background-position: center; background-repeat: no-repeat; }
         .active { display: flex; }
 
@@ -32,22 +31,22 @@
 
         /* --- Fonts & Buttons --- */
         .title-3d { font-size: 3.5rem; color: #fff; text-shadow: 0 2px 0 #ff6b81, 0 4px 0 #ff6b81, 0 6px 0 #ff6b81, 0 8px 0 #ff6b81, 0 10px 15px rgba(0,0,0,0.4); margin-bottom: 20px; text-align: center; }
-        .target-word { font-size: 6rem; color: #fffa65; font-weight: bold; text-shadow: 4px 4px 0px #ff4757, 8px 8px 0px #333, 10px 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px; z-index: 20; letter-spacing: 5px; text-align: center; }
+        .target-word { font-size: 6rem; color: #fffa65; font-weight: bold; text-shadow: 4px 4px 0px #ff4757, 8px 8px 0px #333, 10px 10px 20px rgba(0,0,0,0.5); margin-bottom: 20px; z-index: 20; letter-spacing: 5px; }
         .btn { padding: 12px 30px; font-size: 1.5rem; background-color: #ff9ff3; color: white; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 6px 0 #f368e0; font-family: 'Fredoka', sans-serif; margin: 5px; transition: all 0.1s; }
         .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #f368e0; }
+        
         .mic-active-effect { box-shadow: 0 0 20px #ff6b81, 0 10px 0 #c0392b !important; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         /* --- Game Play Elements --- */
-        .mouth-zone { position: absolute; border-radius: 50%; z-index: 10; border: 3px dashed rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1); transition: transform 0.2s; }
-        .mouth-zone.drag-over { transform: scale(1.2); background: rgba(255, 255, 255, 0.5); border: 4px solid #fff; }
+        .mouth-zone { position: absolute; border-radius: 50%; z-index: 10; border: 3px dashed rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1); }
         .conveyor-belt { position: absolute; bottom: 0; width: 100%; height: 120px; z-index: 15; }
         
         /* --- Sushi CSS Art --- */
-        .sushi-wrapper { position: absolute; bottom: 25px; display: flex; flex-direction: column; align-items: center; cursor: grab; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); user-select: none; z-index: 16; touch-action: none; }
-        .sushi-wrapper.dragging { cursor: grabbing; filter: drop-shadow(0 15px 15px rgba(0,0,0,0.6)); transform: scale(1.1); z-index: 1000 !important; }
-        .sushi-topping { width: 110%; height: 28px; border-radius: 20px 20px 5px 5px; margin-bottom: -10px; z-index: 2; border: 2px solid rgba(0,0,0,0.1); border-bottom: none; pointer-events: none; }
-        .sushi-rice { background: #fff; border: 3px solid #ccc; padding: 5px 25px; border-radius: 10px 10px 20px 20px; font-size: 1.6rem; font-weight: bold; color: #333; z-index: 1; text-align: center; box-shadow: inset -4px -4px 6px rgba(0,0,0,0.08); pointer-events: none; }
+        .sushi-wrapper { position: absolute; bottom: 25px; display: flex; flex-direction: column; align-items: center; cursor: grab; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); user-select: none; z-index: 16; }
+        .sushi-wrapper:active { cursor: grabbing; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.6)); transform: scale(0.95); }
+        .sushi-topping { width: 110%; height: 28px; border-radius: 20px 20px 5px 5px; margin-bottom: -10px; z-index: 2; border: 2px solid rgba(0,0,0,0.1); border-bottom: none; }
+        .sushi-rice { background: #fff; border: 3px solid #ccc; padding: 5px 25px; border-radius: 10px 10px 20px 20px; font-size: 1.6rem; font-weight: bold; color: #333; z-index: 1; text-align: center; box-shadow: inset -4px -4px 6px rgba(0,0,0,0.08); }
 
         .topping-1 { background: repeating-linear-gradient(45deg, #ff7f50, #ff7f50 10px, #ff9f7a 10px, #ff9f7a 20px); }
         .topping-2 { background: #e74c3c; }
@@ -64,38 +63,27 @@
         table { width: 100%; border-collapse: collapse; }
         th { background: #ff6b81; color: white; padding: 10px; position: sticky; top: 0; }
         td { padding: 8px; border-bottom: 1px solid #ddd; text-align: center; }
-
-        @media (max-width: 768px) {
-            .title-3d { font-size: 2.5rem; }
-            .target-word { font-size: 4rem; }
-            #score-display, #boss-score-display { font-size: 1.5rem; left: 15px; }
-            #timer-display, #boss-timer-display { font-size: 1.8rem; padding: 5px 15px; }
-            .btn-home { right: 15px; padding: 8px 15px; font-size: 1rem; }
-            .btn { font-size: 1.2rem; padding: 10px 20px; }
-            .how-to-box h1 { font-size: 2rem !important; }
-            .how-to-box p { font-size: 1rem; }
-        }
     </style>
 </head>
 <body>
 
-<audio id="tts-audio"></audio>
 <audio id="bg-music" src="bg-music.mp3" loop></audio>
 
 <div id="game-container">
     <div id="home-screen" class="screen active">
-        <button class="btn" style="background-color: #54a0ff; box-shadow: 0 5px 0 #2e86de;" onclick="unlockAudio(); showScreen('how-to-screen')">How to Play</button>
-        <button class="btn" style="font-size: 2.5rem; padding: 20px 60px;" onclick="unlockAudio(); startGameSession()">START</button>
+        <button class="btn" style="background-color: #54a0ff; box-shadow: 0 5px 0 #2e86de;" onclick="showScreen('how-to-screen')">How to Play</button>
+        <button class="btn" style="font-size: 2.5rem; padding: 20px 60px;" onclick="startGameSession()">START</button>
     </div>
 
     <div id="how-to-screen" class="screen">
         <button class="btn" style="position: absolute; top: 15px; left: 15px; background-color: #ee5253; box-shadow: 0 4px 0 #c0392b;" onclick="showScreen('home-screen')">⬅ Back</button>
-        <div class="how-to-box" style="background: white; padding: 25px; border-radius: 30px; width: 80%; text-align: left; border: 6px solid #ff9ff3; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+        <div style="background: white; padding: 25px; border-radius: 30px; width: 80%; text-align: left; border: 6px solid #ff9ff3; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
             <h1 class="title-3d" style="font-size: 3rem; margin-top: 0; color: #ff6b81; text-shadow: none;">How to Play 💡</h1>
-            <p>1. <b>Drag & Drop:</b> ลากซูชิไปป้อนปากมอนสเตอร์ให้ตรงหมวดหมู่ (ลากด้วยนิ้วได้เลย!)</p>
+            <p>1. <b>Drag & Drop:</b> ลากซูชิไปป้อนปากมอนสเตอร์ให้ตรงหมวดหมู่</p>
             <p>2. <b>Listening:</b> ฟังเสียงอ่านคำศัพท์ขณะวิ่งบนสายพาน</p>
             <p>3. <b>Boss Stage:</b> กดไมค์ครั้งเดียวแล้วออกเสียงยาวๆ ได้เลย!</p>
-            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap;">
+            
+            <div style="display: flex; justify-content: center; gap: 15px; margin-top: 20px;">
                 <button class="btn" style="background-color: #ff9f43; box-shadow: 0 6px 0 #e67e22;" onclick="showScreen('characters-screen')">👾 Meet the Monsters</button>
                 <button class="btn" onclick="showScreen('mode-screen')">Let's Go!</button>
             </div>
@@ -135,15 +123,15 @@
         </div>
         <h1 class="title-3d" style="position: absolute; top: 100px;">BOSS STAGE</h1>
         <div class="target-word" id="word-to-say">Word</div>
-        <button class="btn" id="mic-btn" style="background-color: #ff4757; box-shadow: 0 10px 0 #c0392b; font-size: 1.8rem; padding: 20px 40px;" onclick="startListening()">🎤 Tap to Start Mic</button>
+        <button class="btn" id="mic-btn" style="background-color: #ff4757; box-shadow: 0 10px 0 #c0392b; font-size: 2rem; padding: 20px 50px;" onclick="startListening()">🎤 Tap to Start Mic</button>
         <div id="boss-feedback" class="feedback-pop">Correct!</div>
     </div>
 
     <div id="result-screen" class="screen">
-        <div style="background: rgba(255,255,255,0.95); padding: 40px; border-radius: 30px; text-align: center; border: 6px solid #ff9ff3; width: 80%; max-width: 400px;">
+        <div style="background: rgba(255,255,255,0.95); padding: 40px; border-radius: 30px; text-align: center; border: 6px solid #ff9ff3;">
             <h1 style="color: #ff6b81; margin-top: 0;">Excellent! 🌟</h1>
             <h2 id="final-score" style="color: #f39c12; font-size: 3rem; margin:10px 0;">Score: 0</h2>
-            <input type="text" id="player-name" style="padding: 10px; font-size: 1.5rem; text-align: center; border-radius: 10px; border: 2px solid #ff9ff3; width: 90%;" placeholder="ชื่อนักเรียน">
+            <input type="text" id="player-name" style="padding: 10px; font-size: 1.5rem; text-align: center; border-radius: 10px; border: 2px solid #ff9ff3;" placeholder="ชื่อนักเรียน">
             <br><br><button class="btn" onclick="saveScore()">Save Rank</button>
         </div>
     </div>
@@ -200,7 +188,6 @@
     let score = 0, timeLeft = 30, gameInterval, spawnInterval, bossInterval, currentMode, vocabPool = [];
     let currentBossWord = "";
     let isMicActive = false, isBossStageActive = false, isProcessing = false;
-    let isAudioUnlocked = false; // ตัวแปรเช็คการปลดล็อกเสียง
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition;
@@ -208,28 +195,7 @@
         recognition = new SpeechRecognition();
         recognition.lang = 'en-US';
         recognition.interimResults = false;
-        recognition.continuous = true;
-    }
-
-    // --- ฟังก์ชันปลดล็อกข้อจำกัดระบบเสียงของมือถือ ---
-    function unlockAudio() {
-        if (isAudioUnlocked) return;
-        
-        // 1. ปลดล็อกเสียง Effect (อ่านคำศัพท์)
-        const ttsAudio = document.getElementById('tts-audio');
-        ttsAudio.src = "data:audio/mp3;base64,//MkxAA"; // เสียงจำลองสั้นๆ
-        ttsAudio.play().then(() => {
-            ttsAudio.pause();
-            ttsAudio.currentTime = 0;
-        }).catch(e => console.log("TTS unlock error", e));
-
-        // 2. ปลดล็อกเสียงพูดสำรองของเครื่อง
-        if ('speechSynthesis' in window) {
-            const utterance = new SpeechSynthesisUtterance('');
-            window.speechSynthesis.speak(utterance);
-        }
-
-        isAudioUnlocked = true;
+        recognition.continuous = true; 
     }
 
     function showScreen(id) {
@@ -238,10 +204,16 @@
         if(id === 'leaderboard-screen') displayLeaderboard();
     }
 
+    // --- อัปเดต: บังคับปลุกระบบเสียง iPad (Text-to-Speech) เมื่อเริ่มเกม ---
     function startGameSession() {
-        // เริ่มเล่นเพลงพร้อมเริ่มโหมด
         const music = document.getElementById('bg-music');
-        if(music) { music.volume = 0.4; music.play().catch(e=>console.log(e)); }
+        if(music) { music.volume = 0.4; music.play(); }
+
+        // ปลุกระบบเสียงสำหรับอุปกรณ์ iOS/iPadOS เมื่อสะท้อนหน้าจอ
+        let wakeUpVoice = new SpeechSynthesisUtterance(' ');
+        wakeUpVoice.volume = 0; // พูดแบบไม่มีเสียง
+        window.speechSynthesis.speak(wakeUpVoice);
+
         showScreen('mode-screen');
     }
 
@@ -265,75 +237,60 @@
         ml.dataset.cat = currentMode.leftMouth.cat; mr.dataset.cat = currentMode.rightMouth.cat;
     }
 
-    let draggingSushi = null, dragOffsetX = 0, dragOffsetY = 0, draggingCat = "";
-    function handleDragStart(e) {
-        e.preventDefault(); draggingSushi = this; draggingCat = this.dataset.cat; this.classList.add('dragging');
-        let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-        let rect = this.getBoundingClientRect(); dragOffsetX = clientX - rect.left; dragOffsetY = clientY - rect.top;
-        this.style.position = 'fixed'; this.style.left = (clientX - dragOffsetX) + 'px'; this.style.top = (clientY - dragOffsetY) + 'px';
-    }
-    function handleDragMove(e) {
-        if (!draggingSushi) return; e.preventDefault();
-        let clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-        let clientY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
-        draggingSushi.style.left = (clientX - dragOffsetX) + 'px'; draggingSushi.style.top = (clientY - dragOffsetY) + 'px';
-        document.querySelectorAll('.mouth-zone').forEach(m => {
-            let rect = m.getBoundingClientRect();
-            if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) { m.classList.add('drag-over'); } else { m.classList.remove('drag-over'); }
-        });
-    }
-    function handleDragEnd(e) {
-        if (!draggingSushi) return;
-        let clientX = e.type.includes('touch') ? e.changedTouches[0].clientX : e.clientX;
-        let clientY = e.type.includes('touch') ? e.changedTouches[0].clientY : e.clientY;
-        let dropped = false;
-        document.querySelectorAll('.mouth-zone').forEach(m => {
-            let rect = m.getBoundingClientRect(); m.classList.remove('drag-over');
-            if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
-                dropped = true; const isCorrect = (draggingCat === m.dataset.cat);
-                showFeedback('big-feedback', isCorrect);
-                if(isCorrect) { score += 10; speak("Correct!"); } else { speak("Wrong!"); }
-                document.getElementById('score-display').innerText = `Score: ${score}`;
-                draggingSushi.remove();
-            }
-        });
-        if (!dropped && draggingSushi.parentNode) { draggingSushi.style.position = 'absolute'; draggingSushi.style.top = ''; draggingSushi.classList.remove('dragging'); }
-        draggingSushi = null; draggingCat = "";
-    }
-    document.addEventListener('mousemove', handleDragMove, {passive: false}); document.addEventListener('touchmove', handleDragMove, {passive: false});
-    document.addEventListener('mouseup', handleDragEnd); document.addEventListener('touchend', handleDragEnd);
-
     function spawnSushi() {
         if (vocabPool.length === 0) vocabPool = [...currentMode.vocab];
         const randomIndex = Math.floor(Math.random() * vocabPool.length);
         const item = vocabPool.splice(randomIndex, 1)[0];
         const toppingType = Math.floor(Math.random() * 5) + 1;
-        const wrapper = document.createElement('div'); wrapper.className = 'sushi-wrapper'; wrapper.dataset.cat = item.cat;
+        const wrapper = document.createElement('div'); wrapper.className = 'sushi-wrapper'; wrapper.draggable = true; 
         wrapper.innerHTML = `<div class="sushi-topping topping-${toppingType}"></div><div class="sushi-rice">${item.word}</div>`;
-        wrapper.addEventListener('mousedown', handleDragStart); wrapper.addEventListener('touchstart', handleDragStart, {passive: false});
+        wrapper.addEventListener('dragstart', (e) => { e.dataTransfer.setData('cat', item.cat); wrapper.id = 'dragging-item'; });
         document.getElementById('conveyor').appendChild(wrapper);
         speak(item.word);
         let pos = 100;
-        let moveInterval = setInterval(() => { 
-            if(draggingSushi !== wrapper) { pos -= 0.6; wrapper.style.left = pos + '%'; if(pos < -20) { clearInterval(moveInterval); if(wrapper.parentNode) wrapper.remove(); } }
-        }, 20);
+        let move = setInterval(() => { pos -= 0.6; wrapper.style.left = pos + '%'; if(pos < -20) { clearInterval(move); if(wrapper.parentNode) wrapper.remove(); } }, 20);
     }
+
+    document.querySelectorAll('.mouth-zone').forEach(m => {
+        m.addEventListener('dragover', (e) => { e.preventDefault(); m.classList.add('drag-over'); });
+        m.addEventListener('dragleave', () => m.classList.remove('drag-over'));
+        m.addEventListener('drop', (e) => {
+            e.preventDefault(); m.classList.remove('drag-over');
+            const cat = e.dataTransfer.getData('cat');
+            const isCorrect = (cat === m.dataset.cat);
+            showFeedback('big-feedback', isCorrect);
+            if(isCorrect) { score += 10; speak("Correct!"); } else { speak("Wrong!"); }
+            const dragging = document.getElementById('dragging-item');
+            if(dragging) dragging.remove();
+            document.getElementById('score-display').innerText = `Score: ${score}`;
+        });
+    });
 
     function showFeedback(id, correct) {
         const fb = document.getElementById(id); fb.innerText = correct ? "Correct! ✅" : "Wrong! ❌";
-        fb.className = `feedback-pop show ${correct ? 'correct' : 'wrong'}`; setTimeout(() => fb.classList.remove('show'), 800);
+        fb.className = `feedback-pop show ${correct ? 'correct' : 'wrong'}`;
+        setTimeout(() => fb.classList.remove('show'), 800);
     }
 
     function endFeeding() { clearInterval(gameInterval); clearInterval(spawnInterval); document.getElementById('conveyor').innerHTML = ''; startBoss(); }
 
     function startBoss() {
-        showScreen('boss-screen'); let bTime = 30; document.getElementById('boss-score-display').innerText = `Score: ${score}`;
+        showScreen('boss-screen'); let bTime = 30;
+        document.getElementById('boss-score-display').innerText = `Score: ${score}`;
+        
         isBossStageActive = true; isMicActive = false; isProcessing = false;
-        const btn = document.getElementById('mic-btn'); btn.innerText = "🎤 Tap to Start Mic"; btn.style.backgroundColor = "#ff4757"; btn.classList.remove('mic-active-effect'); btn.style.pointerEvents = "auto";
+        
+        const btn = document.getElementById('mic-btn');
+        btn.innerText = "🎤 Tap to Start Mic"; btn.style.backgroundColor = "#ff4757";
+        btn.classList.remove('mic-active-effect'); btn.style.pointerEvents = "auto";
+
         bossInterval = setInterval(() => { 
             bTime--; document.getElementById('boss-timer-display').innerText = `Time: ${bTime}`; 
-            if(bTime<=0) { isBossStageActive = false; isMicActive = false; if(recognition) recognition.stop(); clearInterval(bossInterval); showResult(); } 
+            if(bTime<=0) { 
+                isBossStageActive = false; isMicActive = false;
+                if(recognition) recognition.stop();
+                clearInterval(bossInterval); showResult(); 
+            } 
         }, 1000);
         nextBossWord();
     }
@@ -346,32 +303,68 @@
     function startListening() {
         if (!recognition) return alert("Google Chrome required!");
         if (isMicActive) return;
-        isMicActive = true; isProcessing = false;
-        const btn = document.getElementById('mic-btn'); btn.innerText = "🔴 Mic Active (พูดได้เลย!)"; btn.style.backgroundColor = "#ff6b81"; btn.classList.add('mic-active-effect'); btn.style.pointerEvents = "none";
+
+        isMicActive = true;
+        isProcessing = false;
+        
+        const btn = document.getElementById('mic-btn'); 
+        btn.innerText = "🔴 Mic Active (พูดได้เลย!)"; 
+        btn.style.backgroundColor = "#ff6b81"; btn.classList.add('mic-active-effect'); btn.style.pointerEvents = "none";
+        
         try { recognition.start(); } catch(e) {}
 
         recognition.onresult = (event) => {
             if (isProcessing || !isBossStageActive) return; 
+            
             const latestResultIndex = event.results.length - 1;
-            let spoken = event.results[latestResultIndex][0].transcript.toLowerCase().trim().replace(/[^a-zก-ฮะ-์ ]/gi, "");
+            let spoken = event.results[latestResultIndex][0].transcript.toLowerCase().trim();
+            spoken = spoken.replace(/[^a-zก-ฮะ-์ ]/gi, "");
+            
             let isCorrect = (spoken === currentBossWord.toLowerCase());
-            if (!isCorrect && fuzzyDict[currentBossWord.toLowerCase()]) { isCorrect = fuzzyDict[currentBossWord.toLowerCase()].some(val => spoken.includes(val) || val.includes(spoken)); }
+            if (!isCorrect && fuzzyDict[currentBossWord.toLowerCase()]) {
+                isCorrect = fuzzyDict[currentBossWord.toLowerCase()].some(val => spoken.includes(val) || val.includes(spoken));
+            }
             showFeedback('boss-feedback', isCorrect);
+            
             if (isCorrect) {
-                isProcessing = true; score += 20; document.getElementById('boss-score-display').innerText = `Score: ${score}`;
-                speak("Excellent!"); setTimeout(() => { if (isBossStageActive) { nextBossWord(); isProcessing = false; } }, 1500);
-            } else { isProcessing = true; speak("Try again!"); setTimeout(() => { isProcessing = false; }, 1000); }
+                isProcessing = true; 
+                score += 20; document.getElementById('boss-score-display').innerText = `Score: ${score}`;
+                speak("Excellent!"); 
+                
+                setTimeout(() => { 
+                    if (isBossStageActive) { 
+                        nextBossWord(); 
+                        isProcessing = false; 
+                    } 
+                }, 1500);
+            } else { 
+                isProcessing = true; speak("Try again!"); 
+                setTimeout(() => { isProcessing = false; }, 1000);
+            }
         };
 
-        recognition.onend = () => { if(isMicActive && isBossStageActive) { setTimeout(() => { try { recognition.start(); } catch(e) {} }, 200); } };
+        recognition.onend = () => { 
+            if(isMicActive && isBossStageActive) { 
+                setTimeout(() => { 
+                    try { recognition.start(); } catch(e) {} 
+                }, 200);
+            } 
+        };
+        
+        recognition.onerror = (e) => {
+            console.log("Mic Status:", e.error);
+        };
     }
 
     function showResult() { document.getElementById('final-score').innerText = `Score: ${score}`; showScreen('result-screen'); }
 
     function saveScore() {
-        const name = document.getElementById('player-name').value || "Student"; const stars = score >= 150 ? "⭐⭐⭐" : (score >= 80 ? "⭐⭐" : "⭐");
-        let history = JSON.parse(localStorage.getItem('monsterScores')) || []; history.push({ name, score, stars }); history.sort((a, b) => b.score - a.score);
-        localStorage.setItem('monsterScores', JSON.stringify(history)); displayLeaderboard(); showScreen('leaderboard-screen');
+        const name = document.getElementById('player-name').value || "Student";
+        const stars = score >= 150 ? "⭐⭐⭐" : (score >= 80 ? "⭐⭐" : "⭐");
+        let history = JSON.parse(localStorage.getItem('monsterScores')) || [];
+        history.push({ name, score, stars }); history.sort((a, b) => b.score - a.score);
+        localStorage.setItem('monsterScores', JSON.stringify(history));
+        displayLeaderboard(); showScreen('leaderboard-screen');
     }
 
     function displayLeaderboard() {
@@ -382,28 +375,13 @@
 
     function deleteScore(index) {
         if(confirm("ลบรายชื่อ?")) {
-            let history = JSON.parse(localStorage.getItem('monsterScores')) || []; history.splice(index, 1); localStorage.setItem('monsterScores', JSON.stringify(history)); displayLeaderboard();
+            let history = JSON.parse(localStorage.getItem('monsterScores')) || [];
+            history.splice(index, 1); localStorage.setItem('monsterScores', JSON.stringify(history));
+            displayLeaderboard();
         }
     }
 
-    // --- ฟังก์ชันอ่านออกเสียงที่เสถียรที่สุด ---
-    function speak(word) {
-        const ttsAudio = document.getElementById('tts-audio');
-        // ใช้บริการแปลเสียงให้เป็น Native US English
-        ttsAudio.src = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en-US&q=${encodeURIComponent(word)}`;
-        
-        let playPromise = ttsAudio.play();
-        if (playPromise !== undefined) {
-            playPromise.catch(error => {
-                // ระบบสำรอง หากเน็ตหลุดหรือถูกบล็อก ให้ใช้เสียงในเครื่องแทน
-                window.speechSynthesis.cancel();
-                let utterance = new SpeechSynthesisUtterance(word);
-                utterance.lang = 'en-US';
-                utterance.rate = 0.9; // ปรับให้อ่านช้าลงนิดนึงเพื่อให้เด็ก ป.1-3 ฟังชัดๆ
-                window.speechSynthesis.speak(utterance);
-            });
-        }
-    }
+    function speak(t) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); }
 </script>
 </body>
 </html>
